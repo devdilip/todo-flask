@@ -35,7 +35,6 @@ def test_db_connection():
         hed = '<h1>Something is broken.</h1>'
         return hed + error_text
 
-
 app.add_url_rule("/todos", "Fetch all todos", todo_route.get_todos, methods=['GET'])
 app.add_url_rule("/todo/<id>", "Get, Update and Delete specific todo", todo_route.todo_by_id, methods=['GET', 'DELETE', 'PUT'])
 app.add_url_rule("/todo", "Add new todo", todo_route.add_todo, methods=['POST'])
