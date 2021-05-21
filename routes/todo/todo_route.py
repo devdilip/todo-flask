@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
-from services.todo import todo_service
 
 todo_route_page = Blueprint('todo_route_page', __name__, template_folder='todo_templates')
+from services.todo import todo_service
 
 
 @todo_route_page.route("/todos", methods=["GET"])

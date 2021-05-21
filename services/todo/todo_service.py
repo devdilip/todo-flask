@@ -1,7 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from models.todo.todo import Todo
 from app import db, app
-from models.status.status import Status
 from services.status import status_service
 
 from flask_marshmallow import Marshmallow
@@ -49,18 +48,18 @@ def fetch_todo():
 
 def fetch_todo_by_id(id):
     todos = Todo.query.filter_by(id=id).first()
-    status = status_service.fetch_status_by_todo_id(todos.id)
     todo_schema = TodoSchema()
     result = todo_schema.dump(todos)
-    result['status'] = status
+    if bool(todos) is True:
+        status = status_service.fetch_status_by_todo_id(todos.id)
+        result['status'] = status
     return result
 
 
 def update_todo(id, name, is_active):
     try:
         todos = Todo.query.filter_by(id=id).first()
-        res = not bool(todos)
-        if res is not True:
+        if bool(todos) is True:
             todos.name = name
             todos.is_active = is_active
             db.session.commit()
@@ -76,8 +75,7 @@ def update_todo(id, name, is_active):
 def delete_todo(id):
     try:
         todos = Todo.query.filter_by(id=id).first()
-        res = not bool(todos)
-        if res is not True:
+        if bool(todos) is True:
             db.session.delete(todos)
             db.session.commit()
             return "Todo has been Deleted Successfully!"
