@@ -41,17 +41,18 @@ def fetch_todo():
     todos = Todo.query.all()
     todo_schema = TodoSchema(many=True)
     result = todo_schema.dump(todos)
+    for r in result:
+        status = status_service.fetch_status_by_todo_id(r['id'])
+        r['status'] = status
     return result
 
 
 def fetch_todo_by_id(id):
     todos = Todo.query.filter_by(id=id).first()
-    print(todos.id)
     status = status_service.fetch_status_by_todo_id(todos.id)
-    print(status)
     todo_schema = TodoSchema()
     result = todo_schema.dump(todos)
-
+    result['status'] = status
     return result
 
 
