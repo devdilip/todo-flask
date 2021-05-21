@@ -1,7 +1,6 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from services.todo import todo_service
 from routes.todo.todo_route import todo_route_page
 
 app = Flask(__name__)
