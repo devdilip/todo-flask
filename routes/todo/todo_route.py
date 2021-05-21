@@ -1,17 +1,17 @@
 from flask import request, jsonify, Blueprint
 from services.todo import todo_service
-from app import app
+
+todo_route_page = Blueprint('todo_route_page', __name__, template_folder='todo_templates')
 
 
-
-@app.route("/todos", methods=["GET"])
+@todo_route_page.route("/todos", methods=["GET"])
 def get_todos():
     todos = todo_service.fetch_todo()
     print(todos)
     return jsonify(todos)
 
 
-@app.route('/todo', methods=["POST"])
+@todo_route_page.route('/todo', methods=["POST"])
 def add_todo():
     json_data = request.json
     id = json_data["id"]
@@ -21,7 +21,7 @@ def add_todo():
     return todo
 
 
-@app.route("/todo/<id>", methods=['GET', 'PUT', 'DELETE'])
+@todo_route_page.route("/todo/<id>", methods=['GET', 'PUT', 'DELETE'])
 def todo_by_id(id):
     if request.method == 'GET':
         return get_todo_by_id(id)

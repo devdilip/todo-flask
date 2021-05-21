@@ -1,13 +1,12 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
 from services.todo import todo_service
+from routes.todo.todo_route import todo_route_page
 
 app = Flask(__name__)
 db = SQLAlchemy()
-
-from routes.todo import todo_route
+app.register_blueprint(todo_route_page)
 
 
 def setup(app, **kwargs):
@@ -23,22 +22,6 @@ def setup(app, **kwargs):
 @app.route('/')
 def health():
     return 'Fine!'
-
-
-@app.route('/test_db')
-def test_db_connection():
-    try:
-        db.session.query(text('1')).from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        error_text = "<p>The error:<br>" + str(e) + "</p>"
-        hed = '<h1>Something is broken.</h1>'
-        return hed + error_text
-
-
-app.add_url_rule("/todos", "Fetch all todos", todo_route.get_todos, methods=['GET'])
-app.add_url_rule("/todo/<id>", "Get, Update and Delete specific todo", todo_route.todo_by_id, methods=['GET', 'DELETE', 'PUT'])
-app.add_url_rule("/todo", "Add new todo", todo_route.add_todo, methods=['POST'])
 
 
 if __name__ == '__main__':
